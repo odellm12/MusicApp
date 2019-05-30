@@ -17,7 +17,7 @@ Make sure to use this same name in  your Android App!
 #endif
 
 #define FACTORYRESET_ENABLE      0
-#define NEW_DEVICE_NAME "PMP590 is awesome"
+#define NEW_DEVICE_NAME "SoundHero"
 #define CMD "AT+GAPDEVNAME="
 #define CHANGE_CMD CMD NEW_DEVICE_NAME
 boolean changed = false;

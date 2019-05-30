@@ -1,7 +1,9 @@
 /*********************************************************************
-  * Michael O'Dell
-  * Adapted from BLE basics homework
-  * Arduion Reciever for sound signal
+ * Michael O'Dell
+ * code built from example:
+  * Laura Arjona. PMPEE590
+  * Example of simple interaction beteween Adafruit Circuit Playground
+  * and Android App. Communication with BLE - uart
 *********************************************************************/
 #include <Arduino.h>
 #include <SPI.h>
@@ -13,7 +15,7 @@
 #include "BluefruitConfig.h"
 
 #if SOFTWARE_SERIAL_AVAILABLE
-  #include <SoftwareSerial.h>
+#include <SoftwareSerial.h>
 #endif
 
 // Strings to compare incoming BLE messages
@@ -34,6 +36,7 @@ int bcol = 255;
 int gcol = 255;
 bool leftButtonPressed;
 bool rightButtonPressed;
+
 int  sensorTemp = 0;
 
 /*=========================================================================
@@ -45,8 +48,30 @@ int  sensorTemp = 0;
 /*=========================================================================*/
 
 // Create the bluefruit object, either software serial...uncomment these lines
+
 Adafruit_BluefruitLE_UART ble(BLUEFRUIT_HWSERIAL_NAME, BLUEFRUIT_UART_MODE_PIN);
 
+/* ...hardware SPI, using SCK/MOSI/MISO hardware SPI pins and then user selected CS/IRQ/RST */
+// Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
+
+/* ...software SPI, using SCK/MOSI/MISO user-defined SPI pins and then user selected CS/IRQ/RST */
+//Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_SCK, BLUEFRUIT_SPI_MISO,
+//                             BLUEFRUIT_SPI_MOSI, BLUEFRUIT_SPI_CS,
+//                             BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
+
+
+// A small helper
+void error(const __FlashStringHelper*err) {
+  Serial.println(err);
+  while (1);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Sets up the HW an the BLE module (this function is called
+            automatically on startup)
+*/
+/**************************************************************************/
 void setup(void)
 {
   CircuitPlayground.begin();
