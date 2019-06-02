@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -187,6 +188,22 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
     companion object {
         private val DEVICE_NAME = "SoundHero"
         private val REQUEST_ENABLE_BT = 0
+    }
+    override fun onSensorChanged(event: SensorEvent?) {
+        var x = event!!.values[0]
+        var y  = event!!.values[1]
+        var z  = event!!.values[2]
+
+        var accR = sqrt(x*x + y*y + z*z)
+
+        var accThresh = 18
+        Log.i("ACCEL", "Accelerometer Data: " + accR)
+        if(accR > accThresh){
+            Log.i("CHECK", "SENDING DATA TO CHECK")
+            checkUserBeat()
+        }
+    }
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
     }
 
     //var accR // This is the accelerometer reading
@@ -444,11 +461,11 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
         193627,
         197059)
     // (18 is a good value for ythe arduino but idk about android)
-    var grace_window = 225 // This is the amount of time the accelerometer has to wait
+    var grace_window = 250 // This is the amount of time the accelerometer has to wait
     // before counting an "above threshold" signal as a fist pump (200-250ms seems resonable)
-    var greenThresh = 20 // This is the distance from the actual beat to the user's attempt that gets a score of "green"
+    var greenThresh = 125 // This is the distance from the actual beat to the user's attempt that gets a score of "green"
     // (20 is a resonable number)
-    var yellowThresh = 40 // This is the distance from the actual beat to the user's attempt that gets a score of "yellow"
+    var yellowThresh = 250 // This is the distance from the actual beat to the user's attempt that gets a score of "yellow"
     // (40 is a resonable number)
     var prevAttempt = 0 // This variable keeps track of the time stamp of the previous succesful fist pump
 
@@ -456,8 +473,9 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
         // I'm not sure what you called your media player or how to get milliseconds from it
         var attempt = mp.getCurrentPosition() // This is the time stamp where the user might have "fist pumped"
 
+        Log.i("Attempt", "Current: "+ attempt+ "\n" + "Previous: " + prevAttempt)
         // This checks if enough time has passed before the next fist pump can be detected
-        if(abs(attempt - prevAttempt) >grace_window){
+        if(attempt - prevAttempt > grace_window){
             // Loops through all the values in "beats"
             var distances = arrayOfNulls<Number>(beats.size)
             for (i in beats.indices) {
@@ -467,13 +485,14 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
             }
             distances.sort()
             var zeroIndex = distances[0]
+            Log.i("Distance", "Distance Away: "+ zeroIndex)
             if(zeroIndex!!.toInt()<greenThresh)
             {
                 ble!!.send("green")
             }
             else if(zeroIndex!!.toInt()<yellowThresh)
             {
-                ble!!.send("yellow")
+                ble!!.send("blue")
             }
             else
             {
@@ -481,21 +500,6 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
             }
             prevAttempt = attempt
         }
-    }
-    override fun onSensorChanged(event: SensorEvent?) {
-        var x = event!!.values[0]
-        var y  = event!!.values[1]
-        var z  = event!!.values[2]
-
-        var accR = sqrt(x*x + y*y + z*z)
-        var accThresh = 18
-
-        if(accR > accThresh){
-            checkUserBeat()
-        }
-    }
-
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
     }
 
 }
