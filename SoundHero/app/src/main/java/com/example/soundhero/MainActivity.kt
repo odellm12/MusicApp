@@ -70,10 +70,6 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
 
     }
 
-    fun clearText (v: View){
-        messages!!.text=""
-    }
-
     override fun onResume() {
         super.onResume()
         ble!!.registerCallback(this)
@@ -463,9 +459,9 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
     // (18 is a good value for ythe arduino but idk about android)
     var grace_window = 250 // This is the amount of time the accelerometer has to wait
     // before counting an "above threshold" signal as a fist pump (200-250ms seems resonable)
-    var greenThresh = 125 // This is the distance from the actual beat to the user's attempt that gets a score of "green"
+    var greenThresh = 30 // This is the distance from the actual beat to the user's attempt that gets a score of "green"
     // (20 is a resonable number)
-    var yellowThresh = 250 // This is the distance from the actual beat to the user's attempt that gets a score of "yellow"
+    var yellowThresh = 60 // This is the distance from the actual beat to the user's attempt that gets a score of "yellow"
     // (40 is a resonable number)
     var prevAttempt = 0 // This variable keeps track of the time stamp of the previous succesful fist pump
 
