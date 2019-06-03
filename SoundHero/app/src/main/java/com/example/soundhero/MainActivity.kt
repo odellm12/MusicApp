@@ -28,6 +28,11 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
     private lateinit var mp: MediaPlayer
     private lateinit var sensorManager: SensorManager
     var position = 0
+    var score = 0
+    var percentage = 0
+    var shakesDetected = 0
+    var numberGreen = 0
+    var numberYellow = 0
 
 
     // Bluetooth
@@ -67,7 +72,7 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
         // Check permissions
         ActivityCompat.requestPermissions(this,
             arrayOf( Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
-
+        beatCounter.text = "Beats: " + beats.size
     }
 
     override fun onResume() {
@@ -95,14 +100,14 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
             mp.pause ()
         }
     }
-    fun continueButton(v: View)
-    {
-        if (mp.isPlaying () == false)
-        {
-            mp.seekTo(position)
-            mp.start()
-        }
-    }
+//    fun continueButton(v: View)
+//    {
+//        if (mp.isPlaying () == false)
+//        {
+//            mp.seekTo(position)
+//            mp.start()
+//        }
+//    }
     fun stopButton(v: View)
     {
         mp.pause ()
@@ -485,16 +490,28 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
             if(zeroIndex!!.toInt()<greenThresh)
             {
                 ble!!.send("green")
+                shakesDetected +=1
+                numberGreen +=1
+
             }
             else if(zeroIndex!!.toInt()<yellowThresh)
             {
                 ble!!.send("blue")
+                shakesDetected +=1
+                numberYellow +=1
             }
             else
             {
                 ble!!.send("red")
+                shakesDetected +=1
             }
             prevAttempt = attempt
+            pointScore.text = "Score: " + (2*numberGreen+numberYellow).toString()
+            if(numberGreen != 0) {
+                var pointPer = (numberGreen.toDouble() / (numberGreen.toDouble() + numberYellow.toDouble()))*100
+                Log.i("Percentage", pointPer.toString())
+                percentScore.text = "Green: " + pointPer.toInt().toString() + "%"
+            }
         }
     }
 
