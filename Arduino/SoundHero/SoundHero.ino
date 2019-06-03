@@ -21,23 +21,12 @@
 // Strings to compare incoming BLE messages
 String start = "start";
 String green = "green";
-String blue = "blue";
+String yellow = "yellow";
 String red = "red";
-String readtemp = "readtemp";
-String stp = "stop";
-String invalid = "invalid";
-String timer = "time";
 int TIME_STEP = 1;
-String beep = "beep";
-String silent = "silent";
-bool sound = false;
 int rcol = 255;
 int bcol = 255;
 int gcol = 255;
-bool leftButtonPressed;
-bool rightButtonPressed;
-
-int  sensorTemp = 0;
 
 /*=========================================================================
     APPLICATION SETTINGS
@@ -163,78 +152,27 @@ void loop(void)
     gcol = 0;
 
   }
-  else if(blue == received){
+  else if(yellow == received){
     Serial.println("RECEIVED BLUE!!!!"); 
        for(int i = 0; i < 11; i++){
-      CircuitPlayground.setPixelColor(i,0, 0, 255);
+      CircuitPlayground.setPixelColor(i,255, 255, 0);
     }
     delay(50);
-    bcol = 255;
-    rcol = 0;
-    gcol = 0;
+    bcol = 0;
+    rcol = 255;
+    gcol = 255;
     
   }
-    else if(green == received){
+  else if(green == received){
       Serial.println("RECEIVED GREEN!!!!"); 
        for(int i = 0; i < 11; i++){
       CircuitPlayground.setPixelColor(i,0, 255, 0);
-    }
+  }
     delay(50);
     bcol = 0;
     rcol = 0;
     gcol = 255;
   }
- 
-  else if(readtemp == received){
-        
-    sensorTemp = CircuitPlayground.temperature(); // returns a floating point number in Centigrade
-    Serial.println("Read temperature sensor"); 
-    delay(10);
-
-   //Send data to Android Device
-    char output[8];
-    String data = "";
-    data += sensorTemp;
-    Serial.println(data);
-    data.toCharArray(output,8);
-    ble.print(data);
-  }
-  else if(invalid == received)
-  {
-    Serial.println(invalid);
-  }
-  else if(beep == received)
-  {
-    sound = true;
-  }
-  else if(silent == received)
-  {
-    sound = false;
-  }
-  else if(received.startsWith(timer) || CircuitPlayground.leftButton())
-  {
-    if(!CircuitPlayground.leftButton())
-    {
-    TIME_STEP = 1;
-    Serial.println(" ");
-    String recievedtext = received.substring(4);
-    int val = recievedtext.toInt();
-    TIME_STEP = val*TIME_STEP;
-    Serial.println(val);
-    }
-    
-      CircuitPlayground.clearPixels();
-      for(int i=0;i<10;i++)
-      {
-        CircuitPlayground.setPixelColor(i, rcol,   gcol,   bcol);
-        delay(100*TIME_STEP);
-      }
-      if(sound == true)
-      {
-      CircuitPlayground.playTone(500,100);
-      }      
-  }
-    
-  }
+}
 
  

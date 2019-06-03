@@ -28,9 +28,6 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
     private lateinit var mp: MediaPlayer
     private lateinit var sensorManager: SensorManager
     var position = 0
-    var score = 0
-    var percentage = 0
-    var shakesDetected = 0
     var numberGreen = 0
     var numberYellow = 0
 
@@ -91,6 +88,10 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
     }
     fun playButton(v: View)
     {
+        if(mp.currentPosition ==0)
+        {
+            resetScore()
+        }
         mp.start()
     }
     fun pauseButton(v: View)
@@ -100,19 +101,12 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
             mp.pause ()
         }
     }
-//    fun continueButton(v: View)
-//    {
-//        if (mp.isPlaying () == false)
-//        {
-//            mp.seekTo(position)
-//            mp.start()
-//        }
-//    }
     fun stopButton(v: View)
     {
         mp.pause ()
         position = 0
         mp.seekTo (0)
+        resetScore()
     }
 
     private fun startScan() {
@@ -191,13 +185,13 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
         private val REQUEST_ENABLE_BT = 0
     }
     override fun onSensorChanged(event: SensorEvent?) {
-        var x = event!!.values[0]
-        var y  = event!!.values[1]
-        var z  = event!!.values[2]
+        val x = event!!.values[0]
+        val y  = event!!.values[1]
+        val z  = event!!.values[2]
 
-        var accR = sqrt(x*x + y*y + z*z)
+        val accR = sqrt(x*x + y*y + z*z)
 
-        var accThresh = 18
+        val accThresh = 18
         Log.i("ACCEL", "Accelerometer Data: " + accR)
         if(accR > accThresh){
             Log.i("CHECK", "SENDING DATA TO CHECK")
@@ -462,7 +456,7 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
         193627,
         197059)
     // (18 is a good value for ythe arduino but idk about android)
-    var grace_window = 250 // This is the amount of time the accelerometer has to wait
+    val graceWindow = 250 // This is the amount of time the accelerometer has to wait
     // before counting an "above threshold" signal as a fist pump (200-250ms seems resonable)
     var greenThresh = 30 // This is the distance from the actual beat to the user's attempt that gets a score of "green"
     // (20 is a resonable number)
@@ -470,45 +464,51 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
     // (40 is a resonable number)
     var prevAttempt = 0 // This variable keeps track of the time stamp of the previous succesful fist pump
 
-    fun checkUserBeat(){
+    private fun resetScore()
+    {
+        numberYellow = 0
+        numberGreen = 0
+        prevAttempt = 0
+        pointScore.text = "Score: " + (2*numberGreen+numberYellow).toString()
+        percentScore.text = "Green: 00%"
+    }
+
+    private fun checkUserBeat(){
         // I'm not sure what you called your media player or how to get milliseconds from it
-        var attempt = mp.getCurrentPosition() // This is the time stamp where the user might have "fist pumped"
+        val attempt = mp.getCurrentPosition() // This is the time stamp where the user might have "fist pumped"
 
         Log.i("Attempt", "Current: "+ attempt+ "\n" + "Previous: " + prevAttempt)
         // This checks if enough time has passed before the next fist pump can be detected
-        if(attempt - prevAttempt > grace_window){
+        if(attempt - prevAttempt > graceWindow){
             // Loops through all the values in "beats"
-            var distances = arrayOfNulls<Number>(beats.size)
+            val distances = arrayOfNulls<Number>(beats.size)
             for (i in beats.indices) {
                 distances[i] = abs(attempt-beats[i])// This is an array of all the distances from each beat to the user's attempt
                 // We may need to subtract every distance by 20-40ms here.
                 // Lets do that if the beat detector seems off
             }
             distances.sort()
-            var zeroIndex = distances[0]
+            val zeroIndex = distances[0]
             Log.i("Distance", "Distance Away: "+ zeroIndex)
             if(zeroIndex!!.toInt()<greenThresh)
             {
                 ble!!.send("green")
-                shakesDetected +=1
                 numberGreen +=1
 
             }
             else if(zeroIndex!!.toInt()<yellowThresh)
             {
-                ble!!.send("blue")
-                shakesDetected +=1
+                ble!!.send("yellow")
                 numberYellow +=1
             }
             else
             {
                 ble!!.send("red")
-                shakesDetected +=1
             }
             prevAttempt = attempt
             pointScore.text = "Score: " + (2*numberGreen+numberYellow).toString()
             if(numberGreen != 0) {
-                var pointPer = (numberGreen.toDouble() / (numberGreen.toDouble() + numberYellow.toDouble()))*100
+                val pointPer = (numberGreen.toDouble() / (numberGreen.toDouble() + numberYellow.toDouble()))*100
                 Log.i("Percentage", pointPer.toString())
                 percentScore.text = "Green: " + pointPer.toInt().toString() + "%"
             }
