@@ -153,7 +153,7 @@ void loop(void)
 
   }
   else if(yellow == received){
-    Serial.println("RECEIVED BLUE!!!!"); 
+    Serial.println("RECEIVED Yellow!!!!"); 
        for(int i = 0; i < 11; i++){
       CircuitPlayground.setPixelColor(i,255, 255, 0);
     }

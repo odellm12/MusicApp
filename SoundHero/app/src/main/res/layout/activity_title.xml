@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/background_dark">
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/background_light"
+            android:hint="Player Name"
+            android:textSize="16pt"
+            android:id="@+id/player"/>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/background_light"
+            android:text="SoundHero is a game where you can try and match the beat of the phone to the kick drum frequency of the song. If you are dead on you get two points per beat, slightly off 1 point, and if you don't get it, nothing. At the end of the song your score will be displayed!"/>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Instructions: "
+            android:textColor="@android:color/background_light"
+            android:textSize="16pt"/>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. Enter Name"
+            android:textColor="@android:color/background_light"
+            android:textSize="12pt"/>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2. Connect to detector"
+            android:textColor="@android:color/background_light"
+            android:textSize="12pt"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="3. Wait For Blue Light"
+        android:textColor="@android:color/background_light"
+        android:textSize="12pt"/>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="4. Press Play"
+            android:textColor="@android:color/background_light"
+            android:textSize="12pt"/>
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Go to Game"
+            android:onClick="goMain"
+            android:background="@drawable/button_border"
+            android:id="@+id/mainButt"/>
+
+</LinearLayout>

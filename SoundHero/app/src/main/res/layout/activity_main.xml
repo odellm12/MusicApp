@@ -6,12 +6,14 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".MainActivity"
+        android:background="@android:color/background_dark">
 
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/playerName"
+            android:textColor="@android:color/background_light"
             android:text="Player Name"
             android:textSize="18pt"/>
 
@@ -19,6 +21,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/connectButt"
             android:onClick="connect"
+            android:background="@drawable/button_border"
             android:text="Connect to Beat Indicator"/>
 
     <LinearLayout
@@ -33,28 +36,26 @@
                 android:id="@+id/beatCounter"
                 android:layout_weight="1"
                 android:text="Beats: XXX"
+                android:textColor="@android:color/background_light"
                 android:textSize="10pt"/>
         <Button android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/playButt"
                 android:layout_weight="1"
                 android:onClick="playButton"
+                android:background="@drawable/button_border"
                 android:text="Play"/>
         <Button android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/pauseButt"
                 android:onClick="pauseButton"
+                android:background="@drawable/button_border"
                 android:text="Pause"
                 android:layout_weight="1"/>
-        <!--<Button android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/contButt"-->
-                <!--android:onClick="continueButton"-->
-                <!--android:text="Continue"-->
-                <!--android:layout_weight="1"/>-->
         <Button android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/stopButt"
+                android:background="@drawable/button_border"
                 android:onClick="stopButton"
                 android:text="Stop"
                 android:layout_weight="1"/>
@@ -73,6 +74,7 @@
             android:layout_height="wrap_content"
             android:textSize="14pt"
             android:text="Score: 000"
+            android:textColor="@android:color/background_light"
             android:layout_weight="1"
             android:id="@+id/pointScore"/>
         <TextView
@@ -80,6 +82,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14pt"
                 android:text="Green: 00%"
+                android:textColor="@android:color/background_light"
                 android:layout_weight="1"
                 android:id="@+id/percentScore"/>
 
@@ -88,7 +91,8 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/bluetoothText"/>
+            android:id="@+id/bluetoothText"
+            android:textColor="@android:color/background_light"/>
 
 
 </LinearLayout>

@@ -19,6 +19,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.InputStream
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
     //Create Media Player
     private lateinit var mp: MediaPlayer
     private lateinit var sensorManager: SensorManager
+    //private lateinit var beats: IntArray
     var position = 0
     var numberGreen = 0
     var numberYellow = 0
@@ -40,6 +42,10 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val name = intent.getStringExtra("player")
+
+        playerName.text = name
 
         mp = MediaPlayer.create(this, R.raw.dota)
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -65,6 +71,12 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
         messages = findViewById(R.id.bluetoothText)
         messages!!.movementMethod = ScrollingMovementMethod()
         ble = BLE(applicationContext, DEVICE_NAME)
+
+        //var t :InputStream = getResources().openRawResource(R.raw.dotamono)
+
+
+
+       //beats = getKickLocations()
 
         // Check permissions
         ActivityCompat.requestPermissions(this,
@@ -204,6 +216,7 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
     //var accR // This is the accelerometer reading
     //var accR = 0
     //var accThresh = 18// This is the threshold that, if crossed, triggers a fist pump
+    //var beats = getKickLocations()
     var beats = arrayOf(5059,
         18772,
         32490,
@@ -472,7 +485,6 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
         pointScore.text = "Score: " + (2*numberGreen+numberYellow).toString()
         percentScore.text = "Green: 00%"
     }
-
     private fun checkUserBeat(){
         // I'm not sure what you called your media player or how to get milliseconds from it
         val attempt = mp.getCurrentPosition() // This is the time stamp where the user might have "fist pumped"
@@ -514,5 +526,4 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
             }
         }
     }
-
 }
