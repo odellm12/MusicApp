@@ -488,7 +488,6 @@ class MainActivity : AppCompatActivity(), BLE.Callback, SensorEventListener {
     private fun checkUserBeat(){
         // I'm not sure what you called your media player or how to get milliseconds from it
         val attempt = mp.getCurrentPosition() // This is the time stamp where the user might have "fist pumped"
-
         Log.i("Attempt", "Current: "+ attempt+ "\n" + "Previous: " + prevAttempt)
         // This checks if enough time has passed before the next fist pump can be detected
         if(attempt - prevAttempt > graceWindow){
